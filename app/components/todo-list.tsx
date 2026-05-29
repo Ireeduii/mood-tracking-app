@@ -1,54 +1,59 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Plus, Check, Trash2, Circle, Flag } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Plus, Check, Trash2, Circle, Flag } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/app/components/ui/button";
 
-type Priority = "low" | "medium" | "high"
+type Priority = "low" | "medium" | "high";
 
 interface Todo {
-  id: string
-  text: string
-  completed: boolean
-  priority: Priority
+  id: string;
+  text: string;
+  completed: boolean;
+  priority: Priority;
 }
 
 interface TodoListProps {
-  todos: Todo[]
-  onAddTodo: (text: string, priority: Priority) => void
-  onToggleTodo: (id: string) => void
-  onDeleteTodo: (id: string) => void
+  todos: Todo[];
+  onAddTodo: (text: string, priority: Priority) => void;
+  onToggleTodo: (id: string) => void;
+  onDeleteTodo: (id: string) => void;
 }
 
 const priorityColors: Record<Priority, string> = {
   low: "text-mood-calm",
   medium: "text-mood-energetic",
   high: "text-mood-stressed",
-}
+};
 
-export function TodoList({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: TodoListProps) {
-  const [newTodo, setNewTodo] = useState("")
-  const [priority, setPriority] = useState<Priority>("medium")
+export function TodoList({
+  todos,
+  onAddTodo,
+  onToggleTodo,
+  onDeleteTodo,
+}: TodoListProps) {
+  const [newTodo, setNewTodo] = useState("");
+  const [priority, setPriority] = useState<Priority>("medium");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (newTodo.trim()) {
-      onAddTodo(newTodo.trim(), priority)
-      setNewTodo("")
+      onAddTodo(newTodo.trim(), priority);
+      setNewTodo("");
     }
-  }
+  };
 
-  const completedCount = todos.filter((t) => t.completed).length
+  const completedCount = todos.filter((t) => t.completed).length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <div className="flex items-center justify-between">
         <span className="text-sm text-muted-foreground">
           {completedCount} of {todos.length} completed
         </span>
         {todos.length > 0 && (
-          <div className="h-2 w-32 bg-secondary rounded-full overflow-hidden">
+          <div className="h-2 w-40 bg-secondary rounded-full overflow-hidden">
             <div
               className="h-full bg-primary transition-all duration-500"
               style={{ width: `${(completedCount / todos.length) * 100}%` }}
@@ -57,15 +62,15 @@ export function TodoList({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: TodoL
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="flex gap-2 ">
         <input
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
           placeholder="Add a new task..."
-          className="flex-1 px-4 py-3 rounded-xl bg-input border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background text-foreground placeholder:text-muted-foreground"
+          className="flex-1 px-3 py-3 rounded-xl bg-input border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background text-foreground placeholder:text-muted-foreground"
         />
-        <div className="flex gap-1">
+        {/* <div className="flex gap-1">
           {(["low", "medium", "high"] as Priority[]).map((p) => (
             <button
               key={p}
@@ -75,17 +80,17 @@ export function TodoList({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: TodoL
                 "p-3 rounded-xl border transition-all",
                 priority === p
                   ? "bg-secondary border-primary"
-                  : "border-border hover:bg-secondary"
+                  : "border-border hover:bg-secondary",
               )}
               title={`${p} priority`}
             >
               <Flag className={cn("h-4 w-4", priorityColors[p])} />
             </button>
           ))}
-        </div>
+        </div> */}
         <Button type="submit" size="icon" className="h-12 w-12 rounded-xl">
           <Plus className="h-5 w-5" />
-          <span className="sr-only">Add task</span>
+          <span className="sr-only">Add a new task</span>
         </Button>
       </form>
 
@@ -95,7 +100,7 @@ export function TodoList({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: TodoL
             key={todo.id}
             className={cn(
               "flex items-center gap-3 p-4 rounded-xl border border-border bg-card transition-all duration-300",
-              todo.completed && "opacity-60"
+              todo.completed && "opacity-60",
             )}
           >
             <button
@@ -104,7 +109,7 @@ export function TodoList({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: TodoL
                 "flex-shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all",
                 todo.completed
                   ? "bg-primary border-primary text-primary-foreground"
-                  : "border-border hover:border-primary"
+                  : "border-border hover:border-primary",
               )}
             >
               {todo.completed && <Check className="h-4 w-4" />}
@@ -112,12 +117,12 @@ export function TodoList({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: TodoL
             <span
               className={cn(
                 "flex-1 transition-all",
-                todo.completed && "line-through text-muted-foreground"
+                todo.completed && "line-through text-muted-foreground",
               )}
             >
               {todo.text}
             </span>
-            <Flag className={cn("h-4 w-4", priorityColors[todo.priority])} />
+            {/* <Flag className={cn("h-4 w-4", priorityColors[todo.priority])} /> */}
             <button
               onClick={() => onDeleteTodo(todo.id)}
               className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
@@ -135,7 +140,7 @@ export function TodoList({ todos, onAddTodo, onToggleTodo, onDeleteTodo }: TodoL
         )}
       </ul>
     </div>
-  )
+  );
 }
 
-export type { Todo, Priority }
+export type { Todo, Priority };

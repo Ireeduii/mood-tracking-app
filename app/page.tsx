@@ -1,108 +1,136 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Leaf } from "lucide-react"
-import { MoodSelector, type Mood } from "@/components/mood-selector"
-import { JournalEntry } from "@/components/journal-entry"
-import { TodoList, type Todo, type Priority } from "@/components/todo-list"
-import { DailyQuote } from "@/components/daily-quote"
-import { DateDisplay } from "@/components/date-display"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react";
+import { Leaf } from "lucide-react";
+import { MoodSelector, type Mood } from "@/app/components/mood-selector";
+import { JournalEntry } from "@/app/components/journal-entry";
+import { TodoList, type Todo, type Priority } from "@/app/components/todo-list";
+import { DailyQuote } from "@/app/components/daily-quote";
+import { DateDisplay } from "@/app/components/date-display";
+import { ThemeToggle } from "@/app/components/theme-toggle";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
 
 export default function MindSpace() {
-  const [selectedMood, setSelectedMood] = useState<Mood | null>(null)
-  const [journalEntry, setJournalEntry] = useState("")
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [mounted, setMounted] = useState(false)
+  const [selectedMood, setSelectedMood] = useState<Mood | null>(null);
+  const [journalEntry, setJournalEntry] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [mounted, setMounted] = useState(false);
 
-  // Load data from localStorage on mount
+  const saveToBackend = async (updatedData: {
+    mood?: Mood | null;
+    journal?: string;
+    todos?: Todo[];
+    date?: string;
+  }) => {
+    try {
+      console.log("backend ru ilgej bui data:", updatedData);
+      const res = await fetch("/api/mindspace", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+      });
+      console.log("backend-s irj bui data:", res.status);
+    } catch (err) {
+      console.error("didn't save to backend:", err);
+    }
+  };
+
   useEffect(() => {
-    setMounted(true)
-    const savedMood = localStorage.getItem("mindspace-mood")
-    const savedJournal = localStorage.getItem("mindspace-journal")
-    const savedTodos = localStorage.getItem("mindspace-todos")
-    const savedDate = localStorage.getItem("mindspace-date")
+    setMounted(true);
 
-    const today = new Date().toDateString()
-
-    // Reset mood and journal if it's a new day
-    if (savedDate !== today) {
-      localStorage.setItem("mindspace-date", today)
-      localStorage.removeItem("mindspace-mood")
-      localStorage.removeItem("mindspace-journal")
-    } else {
-      if (savedMood) setSelectedMood(savedMood as Mood)
-      if (savedJournal) setJournalEntry(savedJournal)
-    }
-
-    // Load todos (persistent across days)
-    if (savedTodos) {
+    const initFetch = async () => {
       try {
-        setTodos(JSON.parse(savedTodos))
-      } catch {
-        setTodos([])
+        const res = await fetch("/api/mindspace");
+        if (res.ok) {
+          const serverData = await res.json();
+          const today = new Date().toDateString();
+
+          // shine odor ehelsnig shalgah
+          if (serverData.date && serverData.date !== today) {
+            setSelectedMood(null);
+            setJournalEntry("");
+            setTodos(serverData.todos || []);
+            saveToBackend({ mood: null, journal: "", date: today });
+          } else {
+            if (serverData.mood) setSelectedMood(serverData.mood as Mood);
+            if (serverData.journal) setJournalEntry(serverData.journal);
+            if (serverData.todos) setTodos(serverData.todos);
+
+            //  server der ognoo bhgu bol onoodrinhor hadgalna
+            if (!serverData.date) {
+              saveToBackend({ date: today });
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Backend-ээс дата авч чадсангүй:", err);
       }
-    }
+    };
 
-    // Check for dark mode preference
-    const savedTheme = localStorage.getItem("theme")
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+    initFetch();
+
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
     if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      document.documentElement.classList.add("dark")
+      document.documentElement.classList.add("dark");
     }
-  }, [])
+  }, []);
 
-  // Save mood to localStorage
   const handleMoodSelect = (mood: Mood) => {
-    setSelectedMood(mood)
-    localStorage.setItem("mindspace-mood", mood)
-  }
+    setSelectedMood(mood);
+    saveToBackend({ mood });
+  };
 
-  // Save journal to localStorage
   const handleJournalSave = () => {
-    localStorage.setItem("mindspace-journal", journalEntry)
-  }
+    saveToBackend({ journal: journalEntry });
+  };
 
-  // Todo handlers
   const handleAddTodo = (text: string, priority: Priority) => {
     const newTodos = [
       ...todos,
       { id: crypto.randomUUID(), text, completed: false, priority },
-    ]
-    setTodos(newTodos)
-    localStorage.setItem("mindspace-todos", JSON.stringify(newTodos))
-  }
+    ];
+    setTodos(newTodos);
+    saveToBackend({ todos: newTodos });
+  };
 
   const handleToggleTodo = (id: string) => {
     const newTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    )
-    setTodos(newTodos)
-    localStorage.setItem("mindspace-todos", JSON.stringify(newTodos))
-  }
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+    );
+    setTodos(newTodos);
+    saveToBackend({ todos: newTodos });
+  };
 
   const handleDeleteTodo = (id: string) => {
-    const newTodos = todos.filter((todo) => todo.id !== id)
-    setTodos(newTodos)
-    localStorage.setItem("mindspace-todos", JSON.stringify(newTodos))
-  }
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+    saveToBackend({ todos: newTodos });
+  };
 
   if (!mounted) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-pulse flex items-center gap-2">
           <Leaf className="h-8 w-8 text-primary" />
-          <span className="text-xl font-semibold text-foreground">MindSpace</span>
+          <span className="text-xl font-semibold text-foreground">
+            MindSpace
+          </span>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header */}
         <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-primary/10">
@@ -116,18 +144,17 @@ export default function MindSpace() {
           </div>
         </header>
 
-        {/* Daily Quote */}
         <section className="mb-8">
           <DailyQuote />
         </section>
 
-        {/* Main Content Grid */}
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* Mood & Journal Section */}
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">How are you feeling today?</CardTitle>
+                <CardTitle className="text-lg">
+                  How are you feeling today?
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <MoodSelector
@@ -151,7 +178,6 @@ export default function MindSpace() {
             </Card>
           </div>
 
-          {/* Todo Section */}
           <Card className="h-fit">
             <CardHeader>
               <CardTitle className="text-lg">Today&apos;s Tasks</CardTitle>
@@ -167,11 +193,10 @@ export default function MindSpace() {
           </Card>
         </div>
 
-        {/* Footer */}
         <footer className="mt-12 text-center text-sm text-muted-foreground">
           <p>Take care of your mind. One day at a time.</p>
         </footer>
       </div>
     </div>
-  )
+  );
 }

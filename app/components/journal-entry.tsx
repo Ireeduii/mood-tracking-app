@@ -1,23 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { Sparkles } from "lucide-react";
+import { Button } from "./ui/button";
 
 interface JournalEntryProps {
-  entry: string
-  onEntryChange: (entry: string) => void
-  onSave: () => void
+  entry: string;
+  onEntryChange: (entry: string) => void;
+  onSave: () => void;
 }
 
-export function JournalEntry({ entry, onEntryChange, onSave }: JournalEntryProps) {
-  const [isSaved, setIsSaved] = useState(false)
+export function JournalEntry({
+  entry,
+  onEntryChange,
+  onSave,
+}: JournalEntryProps) {
+  const [isSaved, setIsSaved] = useState(false);
 
   const handleSave = () => {
-    onSave()
-    setIsSaved(true)
-    setTimeout(() => setIsSaved(false), 2000)
-  }
+    onSave();
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
+  };
 
   return (
     <div className="space-y-4">
@@ -41,5 +45,5 @@ export function JournalEntry({ entry, onEntryChange, onSave }: JournalEntryProps
         </Button>
       </div>
     </div>
-  )
+  );
 }

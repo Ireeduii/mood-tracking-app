@@ -1,0 +1,18 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Хүснэгтийн бүтэц хэвээрээ үлдэнэ
+model MindSpaceData {
+  id        String   @id @default(uuid())
+  date      String   @unique
+  mood      String?
+  journal   String   @default("")
+  todos     Json     @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
