@@ -45,9 +45,12 @@ export default function MindSpace() {
 
     const initFetch = async () => {
       try {
+        console.log("backend huuchin data");
         const res = await fetch("/api/mindspace");
         if (res.ok) {
           const serverData = await res.json();
+
+          console.log("backendes irsen dataaaaa:", serverData);
           const today = new Date().toDateString();
 
           // shine odor ehelsnig shalgah

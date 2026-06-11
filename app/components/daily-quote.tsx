@@ -57,7 +57,7 @@ export function DailyQuote() {
     <div className="relative p-6 rounded-2xl bg-card border border-border">
       <Quote className="absolute top-4 left-4 h-8 w-8 text-primary/20" />
       <div className="pl-8">
-        <p className="text-lg text-foreground leading-relaxed italic text-balance">
+        <p className="text-lg text-foreground font-semibold leading-relaxed text-balance">
           {quote.text}
         </p>
         <p className="mt-3 text-sm text-muted-foreground">— {quote.author}</p>
