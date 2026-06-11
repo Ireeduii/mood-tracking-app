@@ -32,9 +32,14 @@ export async function POST(request: NextRequest) {
 
     const updatedData = await db.mindSpaceData.upsert({
       where: { date: today },
-      update: body,
+      update: {
+        ...body,
+      },
       create: {
         date: today,
+        mood: body.mood || null,
+        journal: body.journal || "",
+        todos: body.todos || [],
         ...body,
       },
     });
