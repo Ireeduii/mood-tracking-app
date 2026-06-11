@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   title: "MindSpace - Your Daily Companion",
   description:
     "A personalized mood-tracking todo app that connects your productivity with emotional well-being",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
   // generator: "v0.app",
   // icons: {
   //   icon: [
