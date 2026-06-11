@@ -6,32 +6,32 @@ import { Quote } from "lucide-react";
 const quotes = [
   {
     text: "The only way to do great work is to love what you do.",
-    author: "Steve Jobs",
+    author: "bi helsiin",
   },
   { text: "Every moment is a fresh beginning.", author: "T.S. Eliot" },
   {
     text: "Be yourself; everyone else is already taken.",
-    author: "Oscar Wilde",
+    author: "ireedui",
   },
   {
     text: "The mind is everything. What you think you become.",
-    author: "Buddha",
+    author: "Buddha gej bsn shig sanajin",
   },
   {
     text: "Happiness is not something ready made. It comes from your own actions.",
-    author: "Dalai Lama",
+    author: "bi bishlde",
   },
   {
     text: "In the middle of difficulty lies opportunity.",
-    author: "Albert Einstein",
+    author: "biiiii yadi",
   },
   {
     text: "You are never too old to set another goal or dream a new dream.",
-    author: "C.S. Lewis",
+    author: "negen uhaantai hun",
   },
   {
     text: "The best time to plant a tree was 20 years ago. The second best time is now.",
-    author: "Chinese Proverb",
+    author: "hytad zohioloos esh tatav",
   },
   {
     text: "Your limitation—it&apos;s only your imagination.",
