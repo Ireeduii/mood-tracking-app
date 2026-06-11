@@ -95,6 +95,16 @@ export default function MindSpace() {
     saveToBackend({ journal: journalEntry });
   };
 
+  const saveMood = async (newMood: string) => {
+    await fetch("/app/api/mindspace", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        mood: newMood,
+      }),
+    });
+  };
+
   const handleAddTodo = (text: string, priority: Priority) => {
     const newTodos = [
       ...todos,
