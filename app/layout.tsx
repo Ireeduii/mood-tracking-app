@@ -10,24 +10,24 @@ export const metadata: Metadata = {
   title: "MindSpace - Your Daily Companion",
   description:
     "A personalized mood-tracking todo app that connects your productivity with emotional well-being",
-  generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/jellyfish.svg",
-  },
+  // generator: "v0.app",
+  // icons: {
+  //   icon: [
+  //     {
+  //       url: "/icon-light-32x32.png",
+  //       media: "(prefers-color-scheme: light)",
+  //     },
+  //     {
+  //       url: "/icon-dark-32x32.png",
+  //       media: "(prefers-color-scheme: dark)",
+  //     },
+  //     {
+  //       url: "/icon.svg",
+  //       type: "image/svg+xml",
+  //     },
+  //   ],
+  //   apple: "/jellyfish.svg",
+  // },
 };
 
 export default function RootLayout({
